@@ -1,0 +1,16 @@
+.idea
+*.iml
+.gradle
+/build
+/captures
+/outputs
+*.hprof
+
+bin/
+gen/
+out/
+
+.gradle/
+build/
+local.properties
+
