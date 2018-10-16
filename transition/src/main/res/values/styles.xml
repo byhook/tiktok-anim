@@ -1,13 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="TransparentActivityDialog" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@color/colorTransparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@style/AppVideoTheme</item>
     </style>
-
 
     <style name="AppVideoTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:activityOpenEnterAnimation">@null</item>
@@ -25,5 +26,4 @@
         <item name="android:taskToBackEnterAnimation">@null</item>
         <item name="android:taskToBackExitAnimation">@null</item>
     </style>
-
 </resources>

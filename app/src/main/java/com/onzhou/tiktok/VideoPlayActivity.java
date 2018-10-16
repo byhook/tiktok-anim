@@ -1,17 +1,20 @@
 package com.onzhou.tiktok;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.TypeEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.view.MotionEvent;
-import android.view.animation.LinearInterpolator;
+import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
+
+import com.onzhou.transition.StatusBarUtils;
+import com.onzhou.transition.TransitionController;
+import com.onzhou.transition.TransitionMaker;
+import com.onzhou.transition.TransitionParam;
+import com.onzhou.transition.TransitionUtils;
 
 /**
  * @anchor: Andy
@@ -20,76 +23,85 @@ import android.widget.ImageView;
  */
 public class VideoPlayActivity extends FragmentActivity {
 
+    private static final String ANIM_PARAM = "ANIM_PARAM";
+
+    /**
+     * 封面图
+     */
     private ImageView mIvCover;
 
-    private SwitchAnimBean mSwitchAnimBean;
+    /**
+     * 外部控件位置参数
+     */
+    private TransitionParam targetAnimBean;
 
-    public static void intentStart(Context context, SwitchAnimBean animBean) {
+    private TransitionMaker transitionMaker;
+
+    public static void intentStart(Context context, TransitionParam animBean) {
         Intent intent = new Intent(context, VideoPlayActivity.class);
-        intent.putExtra("animBean", animBean);
+        intent.putExtra(ANIM_PARAM, animBean);
         context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtils.enableStatusBar(this, true);
         setContentView(R.layout.activity_video_play);
         setupView();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (transitionMaker != null) {
+            transitionMaker.transitionRelease();
+        }
+    }
+
     private void setupView() {
         mIvCover = (ImageView) findViewById(R.id.video_cover);
+        targetAnimBean = getIntent().getParcelableExtra(ANIM_PARAM);
 
-        mSwitchAnimBean = getIntent().getParcelableExtra("animBean");
-        setupAnim(true, null);
-    }
+        //获取目标宽高,即我们当前需要动画处理最终缩放的宽高
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int targetWidth = displayMetrics.widthPixels;
+        int targetHeight = displayMetrics.heightPixels;
 
-    private void setupAnim(boolean show, Animator.AnimatorListener animatorListener) {
-        int widthPixels = getResources().getDisplayMetrics().widthPixels;
-        int heightPixels = getResources().getDisplayMetrics().heightPixels - 66;
-        float scaleXStart = (float) mSwitchAnimBean.width / widthPixels;
-        float scaleYStart = (float) mSwitchAnimBean.height / heightPixels;
+        transitionMaker = new TransitionController.Builder()
+                .with(mIvCover)
+                .setInterpolator(PathInterpolatorCompat.create(0.32F, 0.94F, 0.6F, 1.0F))
+                .duration(320)
+                .targetWH(targetWidth, targetHeight)
+                .build();
 
-        final PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", show ? scaleXStart : 1.0F, show ? 1.0F : scaleXStart);
-        final PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", show ? scaleYStart : 1.0F, show ? 1.0F : scaleYStart);
-        ObjectAnimator mAlphaAnimator = ObjectAnimator.ofPropertyValuesHolder(mIvCover, scaleX, scaleY);
-        mIvCover.setPivotX(mSwitchAnimBean.pivotX);
-        mIvCover.setPivotY(mSwitchAnimBean.pivotY);
-
-        mAlphaAnimator.setDuration(2000);
-        if (animatorListener != null) {
-            mAlphaAnimator.addListener(animatorListener);
-        }
-        mAlphaAnimator.setInterpolator(new LinearInterpolator());
-        mAlphaAnimator.start();
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-
-                break;
-            case MotionEvent.ACTION_UP:
-
-                break;
-        }
-        return super.dispatchTouchEvent(ev);
+        transitionMaker.transitionEnter(targetAnimBean);
     }
 
     @Override
     public void onBackPressed() {
-        if (mSwitchAnimBean != null) {
-            setupAnim(false, null);
-            mIvCover.postDelayed(new Runnable() {
+        if (targetAnimBean != null) {
+            transitionMaker.transitionExit(new Animator.AnimatorListener() {
                 @Override
-                public void run() {
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
                     finish();
                 }
-            }, 230);
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
         } else {
             finish();
         }
@@ -99,6 +111,6 @@ public class VideoPlayActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        TransitionUtils.finishTransition(this);
     }
 }

@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 /**
- * @anchor: Andy
+ * @anchor: andy
  * @date: 2018-10-08
  * @description:
  */
@@ -28,6 +28,7 @@ public class VideoCoverLayer extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
+        //测试直接硬编码
         int height = (int) ((float) width / 9 * 16);
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
     }

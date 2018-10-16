@@ -1,10 +1,12 @@
 package com.onzhou.tiktok;
 
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.onzhou.transition.TransitionParam;
+import com.onzhou.transition.TransitionUtils;
 
 /**
  * @anchor: Andy
@@ -24,13 +26,7 @@ public class VideoPlayAdapter extends RecyclerView.Adapter<VideoPlayViewHolder> 
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SwitchAnimBean animBean = new SwitchAnimBean();
-                animBean.width = view.getMeasuredWidth();
-                animBean.height = view.getMeasuredHeight();
-                Rect visibleRect = new Rect();
-                view.getGlobalVisibleRect(visibleRect);
-                animBean.pivotX = visibleRect.left;
-                animBean.pivotY = 0;
+                TransitionParam animBean = TransitionUtils.getSourceViewParam(view);
                 VideoPlayActivity.intentStart(view.getContext(), animBean);
             }
         });
