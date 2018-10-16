@@ -8,11 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import com.onzhou.transition.StatusBarUtils;
+import com.onzhou.transition.TransitionCallback;
 import com.onzhou.transition.TransitionController;
-import com.onzhou.transition.TransitionMaker;
 import com.onzhou.transition.TransitionParam;
 import com.onzhou.transition.TransitionUtils;
 
@@ -35,7 +36,7 @@ public class VideoPlayActivity extends FragmentActivity {
      */
     private TransitionParam targetAnimBean;
 
-    private TransitionMaker transitionMaker;
+    private TransitionController transitionController;
 
     public static void intentStart(Context context, TransitionParam animBean) {
         Intent intent = new Intent(context, VideoPlayActivity.class);
@@ -54,8 +55,8 @@ public class VideoPlayActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (transitionMaker != null) {
-            transitionMaker.transitionRelease();
+        if (transitionController != null) {
+            transitionController.transitionRelease();
         }
     }
 
@@ -68,45 +69,29 @@ public class VideoPlayActivity extends FragmentActivity {
         int targetWidth = displayMetrics.widthPixels;
         int targetHeight = displayMetrics.heightPixels;
 
-        transitionMaker = new TransitionController.Builder()
+        transitionController = new TransitionController.Builder()
                 .with(mIvCover)
                 .setInterpolator(PathInterpolatorCompat.create(0.32F, 0.94F, 0.6F, 1.0F))
                 .duration(320)
                 .targetWH(targetWidth, targetHeight)
                 .build();
 
-        transitionMaker.transitionEnter(targetAnimBean);
+        transitionController.transitionEnter(targetAnimBean);
     }
 
     @Override
     public void onBackPressed() {
         if (targetAnimBean != null) {
-            transitionMaker.transitionExit(new Animator.AnimatorListener() {
+            transitionController.transitionExit(new TransitionCallback() {
                 @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
+                public void onTransitionStop() {
                     finish();
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
                 }
             });
         } else {
             finish();
         }
     }
-
 
     @Override
     public void finish() {

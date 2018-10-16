@@ -5,16 +5,19 @@ import android.animation.TimeInterpolator;
 import android.os.Build;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
+
+import java.lang.ref.WeakReference;
 
 /**
  * @anchor: andy
  * @date: 18-10-16
  */
 
-public class TransitionController implements TransitionMaker {
+public class TransitionController {
 
     /**
      * 动画控件
@@ -89,9 +92,9 @@ public class TransitionController implements TransitionMaker {
 
         viewAnimator = animView.animate();
         //头条参数
-        viewAnimator.setInterpolator(PathInterpolatorCompat.create(0.32F, 0.94F, 0.6F, 1.0F));
+        viewAnimator.setInterpolator(timeInterpolator);
         animView.setVisibility(View.VISIBLE);
-        viewAnimator.setDuration(320)
+        viewAnimator.setDuration(duration)
                 .setListener(animatorListener)
                 .scaleX(showAnimation ? 1.0F : scaleXStart)
                 .scaleY(showAnimation ? 1.0F : scaleYStart)
@@ -100,7 +103,11 @@ public class TransitionController implements TransitionMaker {
                 .start();
     }
 
-    @Override
+    /**
+     * 进入的转场动画
+     *
+     * @param param
+     */
     public void transitionEnter(TransitionParam param) {
         this.transitionParam = param;
         animView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -117,16 +124,54 @@ public class TransitionController implements TransitionMaker {
         });
     }
 
-    @Override
-    public void transitionExit(Animator.AnimatorListener animatorListener) {
-        transitionStart(false, animatorListener);
+    /**
+     * 退出的转场动画
+     *
+     * @param transitionCallback
+     */
+    public void transitionExit(TransitionCallback transitionCallback) {
+        transitionStart(false, new TransitionAnimation(transitionCallback));
     }
 
-    @Override
+    /**
+     * 释放动画
+     */
     public void transitionRelease() {
         if (viewAnimator != null) {
             viewAnimator.cancel();
             viewAnimator = null;
+        }
+    }
+
+    private static class TransitionAnimation implements Animator.AnimatorListener {
+
+        private WeakReference<TransitionCallback> weakCallback;
+
+        public TransitionAnimation(TransitionCallback transitionCallback) {
+            weakCallback = new WeakReference<>(transitionCallback);
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            TransitionCallback callback = weakCallback.get();
+            if (callback != null) {
+                callback.onTransitionStop();
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
         }
     }
 
