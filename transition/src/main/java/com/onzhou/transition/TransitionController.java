@@ -58,7 +58,12 @@ public class TransitionController {
         this.timeInterpolator = timeInterpolator;
     }
 
-    private void transitionStart(boolean showAnimation, Animator.AnimatorListener animatorListener) {
+    /**
+     * 进入和退出的动画
+     * @param enterAnimation
+     * @param animatorListener
+     */
+    private void transitionStart(boolean enterAnimation, Animator.AnimatorListener animatorListener) {
         //标识我们点击的View在屏幕中可见的高度
         int visibleHeight = transitionParam.bottom - transitionParam.top;
 
@@ -81,15 +86,15 @@ public class TransitionController {
             startTransY = transitionParam.top;
         }
 
-        if (showAnimation) {
+        if (enterAnimation) {
             //显示动画设置移动的起始位置,关闭动画只指定目标位移位置
             animView.setTranslationX(startTransX);
             animView.setTranslationY(startTransY);
         }
 
         //设置缩放点
-        animView.setScaleX(showAnimation ? scaleXStart : 1.0F);
-        animView.setScaleY(showAnimation ? scaleYStart : 1.0F);
+        animView.setScaleX(enterAnimation ? scaleXStart : 1.0F);
+        animView.setScaleY(enterAnimation ? scaleYStart : 1.0F);
 
         viewAnimator = animView.animate();
         //头条参数
@@ -97,10 +102,10 @@ public class TransitionController {
         animView.setVisibility(View.VISIBLE);
         viewAnimator.setDuration(duration)
                 .setListener(animatorListener)
-                .scaleX(showAnimation ? 1.0F : scaleXStart)
-                .scaleY(showAnimation ? 1.0F : scaleYStart)
-                .translationX(showAnimation ? 0.0F : startTransX)
-                .translationY(showAnimation ? 0.0F : startTransY)
+                .scaleX(enterAnimation ? 1.0F : scaleXStart)
+                .scaleY(enterAnimation ? 1.0F : scaleYStart)
+                .translationX(enterAnimation ? 0.0F : startTransX)
+                .translationY(enterAnimation ? 0.0F : startTransY)
                 .start();
     }
 
