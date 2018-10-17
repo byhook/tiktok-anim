@@ -3,7 +3,7 @@
 
 可以先看看今日头条效果
 
-![](https://user-gold-cdn.xitu.io/2018/10/17/1668119a6403ff0f?w=320&h=640&f=webp&s=1239508)
+![](https://github.com/byhook/tiktok-anim/blob/master/screenshots/toutiao.webp)
 
 
 ## 功能分析
@@ -36,7 +36,7 @@ transitionController.transitionEnter(targetAnimBean, new TransitionCallback() {
 
 来看看实际效果:
 
-![](https://user-gold-cdn.xitu.io/2018/10/17/166811af4589f60f?w=320&h=640&f=webp&s=930732)
+![](https://github.com/byhook/tiktok-anim/blob/master/screenshots/mine.webp)
 
 ## 功能实现
 给出部分关键的逻辑
