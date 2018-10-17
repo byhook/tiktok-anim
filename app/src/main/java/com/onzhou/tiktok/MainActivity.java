@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupView() {
         mRecycleView = (RecyclerView) findViewById(R.id.recycle_cover);
         mRecycleView.setLayoutManager(new GridLayoutManager(this, 2));
-        mRecycleView.addItemDecoration(new GridItemDecoration());
+        //mRecycleView.addItemDecoration(new GridItemDecoration());
         mRecycleView.setAdapter(new VideoPlayAdapter());
     }
 

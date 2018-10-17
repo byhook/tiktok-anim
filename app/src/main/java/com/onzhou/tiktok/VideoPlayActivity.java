@@ -3,12 +3,17 @@ package com.onzhou.tiktok;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.onzhou.transition.StatusBarUtils;
@@ -64,19 +69,17 @@ public class VideoPlayActivity extends FragmentActivity {
         mIvCover = (ImageView) findViewById(R.id.video_cover);
         targetAnimBean = getIntent().getParcelableExtra(ANIM_PARAM);
 
-        //获取目标宽高,即我们当前需要动画处理最终缩放的宽高
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int targetWidth = displayMetrics.widthPixels;
-        int targetHeight = displayMetrics.heightPixels;
-
         transitionController = new TransitionController.Builder()
-                .with(mIvCover)
+                .with(findViewById(R.id.main_root_layer))
                 .setInterpolator(PathInterpolatorCompat.create(0.32F, 0.94F, 0.6F, 1.0F))
                 .duration(320)
-                .targetWH(targetWidth, targetHeight)
                 .build();
+        transitionController.transitionEnter(targetAnimBean, new TransitionCallback() {
+            @Override
+            public void onTransitionStop() {
 
-        transitionController.transitionEnter(targetAnimBean);
+            }
+        });
     }
 
     @Override

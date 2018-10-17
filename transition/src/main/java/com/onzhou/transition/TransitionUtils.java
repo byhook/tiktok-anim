@@ -41,6 +41,7 @@ public class TransitionUtils {
         return null;
     }
 
+
     public static void finishTransition(Activity activity) {
         if (activity != null) {
             activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

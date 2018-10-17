@@ -2,6 +2,7 @@ package com.onzhou.transition;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.os.Build;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
@@ -108,7 +109,7 @@ public class TransitionController {
      *
      * @param param
      */
-    public void transitionEnter(TransitionParam param) {
+    public void transitionEnter(TransitionParam param, final TransitionCallback transitionCallback) {
         this.transitionParam = param;
         animView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -118,8 +119,10 @@ public class TransitionController {
                 } else {
                     animView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
+                targetWidth = animView.getMeasuredWidth();
+                targetHeight = animView.getMeasuredHeight();
                 //开始执行动画
-                transitionStart(true, null);
+                transitionStart(true, new TransitionAnimation(transitionCallback));
             }
         });
     }
@@ -138,6 +141,7 @@ public class TransitionController {
      */
     public void transitionRelease() {
         if (viewAnimator != null) {
+            viewAnimator.setListener(null);
             viewAnimator.cancel();
             viewAnimator = null;
         }
