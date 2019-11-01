@@ -2,11 +2,7 @@ package com.onzhou.transition;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
 import android.os.Build;
-import android.support.v4.view.animation.PathInterpolatorCompat;
-import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;

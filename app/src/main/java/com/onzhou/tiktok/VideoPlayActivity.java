@@ -6,15 +6,16 @@ import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
+import androidx.core.view.animation.PathInterpolatorCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.onzhou.transition.StatusBarUtils;
 import com.onzhou.transition.TransitionCallback;
